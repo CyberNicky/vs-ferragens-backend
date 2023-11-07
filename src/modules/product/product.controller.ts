@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { Product as ProductModel } from '@prisma/client';
+import { Product as ProductModel, InputType } from '@prisma/client';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { create } from 'domain';
 
@@ -22,17 +22,27 @@ export class ProductController {
   }
 
   @Get('product/:id')
-  async getProductById(@Param('id') id: string): Promise<ProductModel> {
-    return this.productService.product({ id: Number(id) });
+  async getProductById(@Param('id') id: string): Promise<any> {
+    return Promise.all([
+      this.productService.product({ id: +id }),
+      this.productService.inputs(+id),
+    ]);
   }
 
   @Post('product')
   async createProduct(@Body() data: CreateProductDto): Promise<ProductModel> {
+    const inputs = data.inputs?.length > 0 ? data.inputs : [1];
+
+    const inputType: InputType = 'TEXT';
+
     return this.productService.createProduct({
       ...data,
       inputs: {
-        //connect or create
-        connect: [{ name: 'Nome do cliente', type: 'TEXT' }],
+        connectOrCreate: inputs.map((id) => ({
+          where: { id },
+          create: { name: 'Nome do cliente', type: inputType },
+        })),
+        // create: [{ name: 'Nome do cliente', type: inputType }],
       },
     });
   }

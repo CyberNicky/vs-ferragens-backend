@@ -18,14 +18,14 @@ enum InputType {
 }
 
 model InputOption {
-  id     Int     @id @default(autoincrement())
+  id     Int     @id @unique @default(autoincrement())
   name   String
   inputs Input[]
   // inputOptionOnInput InputOptionOnInput[]
 }
 
 model Input {
-  id       Int           @id @default(autoincrement())
+  id       Int           @id @unique @default(autoincrement())
   name     String
   type     InputType
   products Product[]
@@ -44,8 +44,8 @@ model Input {
 // }
 
 model Product {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
+  id          Int     @id @unique @default(autoincrement())
+  name        String
   description String?
   imageUrl    String?
   inputs      Input[]
