@@ -8,10 +8,14 @@ export class ProductService {
 
   async product(
     productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
-  ): Promise<Product | null> {
-    return this.prisma.product.findUnique({
+  ): Promise<any | null> {
+    const product = await this.prisma.product.findUnique({
       where: productWhereUniqueInput,
     });
+
+    const inputs = await this.inputs(productWhereUniqueInput.id);
+
+    return { ...product, inputs };
   }
 
   async products(): Promise<Product[]> {

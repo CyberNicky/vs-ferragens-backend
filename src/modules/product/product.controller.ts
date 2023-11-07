@@ -23,10 +23,7 @@ export class ProductController {
 
   @Get('product/:id')
   async getProductById(@Param('id') id: string): Promise<any> {
-    return Promise.all([
-      this.productService.product({ id: +id }),
-      this.productService.inputs(+id),
-    ]);
+    return this.productService.product({ id: +id });
   }
 
   @Post('product')
@@ -42,7 +39,6 @@ export class ProductController {
           where: { id },
           create: { name: 'Nome do cliente', type: inputType },
         })),
-        // create: [{ name: 'Nome do cliente', type: inputType }],
       },
     });
   }
