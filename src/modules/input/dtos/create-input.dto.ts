@@ -1,4 +1,4 @@
-enum InputType {
+export enum InputType {
   TEXT = 'TEXT',
   NUMBER = 'NUMBER',
   SELECT = 'SELECT',

@@ -1,7 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -21,46 +17,38 @@ model InputOption {
   id     Int     @id @unique @default(autoincrement())
   name   String
   inputs Input[]
-  // inputOptionOnInput InputOptionOnInput[]
 }
 
 model Input {
-  id       Int           @id @unique @default(autoincrement())
-  name     String
-  type     InputType
-  products Product[]
-  options  InputOption[]
-  // inputOnProducts    InputOnProducts[]
-  // inputOptionOnInput InputOptionOnInput[]
+  id           Int           @id @unique @default(autoincrement())
+  name         String
+  type         InputType
+  products     Product[]
+  options      InputOption[]
+  budgetFields BudgetField[]
 }
-
-// model InputOptionOnInput {
-//   input         Input       @relation(fields: [inputId], references: [id])
-//   inputId       Int
-//   inputOption   InputOption @relation(fields: [inputOptionId], references: [id])
-//   inputOptionId Int
-
-//   @@id([inputId, inputOptionId])
-// }
 
 model Product {
-  id          Int     @id @unique @default(autoincrement())
+  id          Int      @id @unique @default(autoincrement())
   name        String
-  description String?
-  imageUrl    String?
+  description String?  @db.VarChar(1000)
+  imageUrl    String?  @db.VarChar(1000)
   inputs      Input[]
-  // inputOnProducts InputOnProducts[]
+  budgets     Budget[]
 }
 
-// model InputOnProducts {
-//   input     Input   @relation(fields: [inputId], references: [id])
-//   inputId   Int
-//   product   Product @relation(fields: [productId], references: [id])
-//   productId Int
-
-//   @@id([inputId, productId])
-// }
+model BudgetField {
+  id       Int    @id @unique @default(autoincrement())
+  value    String
+  input    Input  @relation(fields: [inputId], references: [id])
+  inputId  Int
+  budget   Budget @relation(fields: [budgetId], references: [id])
+  budgetId Int
+}
 
 model Budget {
-  id Int @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
+  product      Product       @relation(fields: [productId], references: [id])
+  productId    Int
+  budgetFields BudgetField[]
 }

@@ -27,18 +27,10 @@ export class InputController {
 
   @Post('input')
   async createInput(@Body() data: CreateInputDto): Promise<InputModel> {
-    const options = data.options?.length > 0 ? data.options : [1];
-
-    const inputType: InputType = 'TEXT';
-
     return this.inputService.createInput({
       ...data,
-
       options: {
-        connectOrCreate: options.map((id) => ({
-          where: { id },
-          create: { name: 'Branco' },
-        })),
+        connect: data.options?.map((id) => ({ id })) || [],
       },
       products: {
         connect: data.products?.map((id) => ({ id })) || [],
