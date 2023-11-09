@@ -31,7 +31,11 @@ export class BudgetService {
       data,
       include: {
         product: true,
-        budgetFields: true,
+        budgetFields: {
+          include: {
+            input: true,
+          },
+        },
       },
     });
   }
